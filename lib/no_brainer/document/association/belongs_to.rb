@@ -52,7 +52,9 @@ class NoBrainer::Document::Association::BelongsTo
     end
 
     def base_criteria(target_class = nil)
-      target_model(target_class)&.without_ordering
+      model = target_model(target_class)
+
+      model ? model.without_ordering : nil
     end
 
     def hook
