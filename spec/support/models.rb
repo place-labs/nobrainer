@@ -157,6 +157,14 @@ module ModelsHelper
   end
 
   def load_belongs_to_polymorphic_models
+    define_class :IdentifiedPerson do
+      include NoBrainer::Document
+
+      field :fullname
+
+      belongs_to :picture
+    end
+
     define_class :Image do
       include NoBrainer::Document
 
@@ -171,13 +179,16 @@ module ModelsHelper
 
     define_class :Picture, Image do
       include NoBrainer::Document
+
+      has_many :people, class_name: 'IdentifiedPerson'
     end
 
     define_class :Event do
       include NoBrainer::Document
 
       belongs_to :restaurant
-      has_many :photos, as: :imageable, class_name: 'Picture'
+      has_many :photos, class_name: 'Picture', as: :imageable
+      has_many :people, through: :photos
     end
 
     define_class :Restaurant do

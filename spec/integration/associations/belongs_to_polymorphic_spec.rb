@@ -118,6 +118,26 @@ describe 'belongs_to polymorphic' do
     end
   end
 
+  context 'proxying a has_many association through a polymorphic association' do
+    it 'returns the associated documents' do
+      event = Event.create(restaurant: restaurant)
+
+      picture = Picture.create(imageable: event, mime: 'image/png')
+      guillaume = IdentifiedPerson.create(picture: picture,
+                                          fullname: 'Guillaume Briat')
+      alexandre = IdentifiedPerson.create(picture: picture,
+                                          fullname: 'Alexandre Astier')
+
+      picture = Picture.create(imageable: event, mime: 'image/png')
+      lionnel = IdentifiedPerson.create(picture: picture,
+                                        fullname: 'Lionnel Astier')
+      franck = IdentifiedPerson.create(picture: picture,
+                                       fullname: 'Franck Pitiot')
+
+      expect(event.people.to_a).to eql([guillaume, alexandre, lionnel, franck])
+    end
+  end
+
   context 'joining on the imageable belongs_to' do
     it 'fails' do
       expect do
